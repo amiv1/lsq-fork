@@ -39,21 +39,53 @@ lsq
 ```
 
 ## Usage
-### Command Line Options
-- `-a`: Append text directly to the current journal page
-- `-A`: Append the contents of STDIN to the current journal page
-- `-c`: Print journal or page content to STDOUT instead of opening an editor.
-- `-d`: Specify main directory path. Supports `~` and environment variables. (example: `~/Documents/Notes`)
-- `-e`: Set editor to use while editing files. (Defaults to $EDITOR, then Vim if $EDITOR is not set)
-- `-f`: Search pages and aliases. Must be followed by a string.
-- `-i`: Set the indentation level (number of tabs) for appended text. Requires `-a` or `-A`.
-- `-n`: Number of days ago to target for the journal entry. (example: `-n 3` targets the journal from 3 days ago)
-- `-o`: Automatically open the first result from the search.
-- `-p`: Open a specific page from the pages directory.
-- `-r`: Search pages and journals via regex pattern. Must be followed by a regex string.
-- `-s`: Specify the journal date to open. (Must be `yyyy-MM-dd` formatted)
-- `-v`: Display the version of lsq being executed.
-- `-y`: Open yesterday's journal file.
+
+### Commands
+
+Each command has a short alias. All commands accept `--dir` and `--editor` as global flags.
+
+#### Journal commands
+Open the journal in your editor, or append text if provided.
+
+| Command | Alias | Description |
+|---------|-------|-------------|
+| `lsq today [text...]` | `lsq t` | Today's journal |
+| `lsq yesterday [text...]` | `lsq y` | Yesterday's journal |
+| `lsq ago <n> [text...]` | `lsq a <n>` | Journal from N days ago |
+
+When piped (`echo "text" | lsq t`), STDIN is appended automatically.  
+Flag: `-i`/`--indent <n>` — indentation level for appended text.
+
+#### `lsq page <name> [text...]` / `lsq p`
+Open a specific page in your editor, or append text to it. File extension is auto-detected.
+
+Flag: `-i`/`--indent <n>`
+
+#### `lsq show` / `lsq s`
+Print to STDOUT. Uses subcommands for date/target selection (default: today).
+
+| Subcommand | Alias | Example |
+|------------|-------|---------|
+| *(default)* | — | `lsq s` |
+| `show yesterday` | `s y` | `lsq s y` |
+| `show ago <n>` | `s a <n>` | `lsq s a 3` |
+| `show date <yyyy-MM-dd>` | `s d <date>` | `lsq s d 2024-01-15` |
+| `show page <name>` | `s p <name>` | `lsq s p notes` |
+
+#### `lsq search <query>` / `lsq sr`
+Search file **contents** across all journals and pages. Plain text matches literally; wrap in `/…/` for regex.
+
+Flag: `-o`/`--open` — open the first matching file in editor.
+
+#### `lsq find <prefix>` / `lsq f`
+Search page **filenames** by prefix.
+
+Flag: `-o`/`--open` — open the first matching page in editor.
+
+#### Global flags
+Available on all commands:
+- `--dir <path>` — Logseq directory (overrides config). Supports `~` and environment variables.
+- `--editor <cmd>` — Editor to use (default: `$EDITOR`, fallback: vim).
 
 ### Configuration File
 This file must be stored in your config directory as `lsq/config.edn`.
@@ -81,53 +113,81 @@ The configuration file will override any lsq defaults which are defined. If a CL
 **Note:** The configured directory must contain both a `journals` and `pages` subdirectory for lsq to function properly. These are automatically created when using Logseq, but will need to be manually created if setting lsq to use a new directory or without Logseq.
 
 ### Usage Examples:
-```bash
-lsq
-```
-This opens today's journal in your default editor ($EDITOR environment variable).
-If no editor is defined in $EDITOR, then `Vim` will be used.
 
 ```bash
-lsq -p file_name.md -a "text to append"
+lsq t
 ```
-This combination will append the text to the page with file name `file_name.md`.
-If `-p` is not provided the appended text will be placed in today's journal entry.
+Opens today's journal in `$EDITOR`.
 
 ```bash
-lsq -f word -o
+lsq t "Entry text here"
 ```
-This will search your pages for files containing "word" and open the first result in $EDITOR.
-If `-o` is not provided lsq will output all files which contain "word" to STDOUT.
+Appends `Entry text here` as a bullet point to today's journal.
 
 ```bash
-cat ~/.zshrc | lsq -A
+lsq a 2 "Entry text here"
 ```
-This will take the contents of your `~/.zshrc` file and append it to your current
-journal. This reads STDIN through to end-of-file, so be sure to `Ctrl-d` if your
-contents don't contain an end-of-file.
+Appends to the journal from 2 days ago.
 
 ```bash
-run_long_batch_job |& lsq -A -p "long-job.$(date +%s).log"
+lsq y "Entry text here"
 ```
-This will run your long-running batch job, and it'll append the contents of STDIN
-and STDERR (note the pipe!) to a new page called `long-job.UNIX_TIMESTAMP.log`.
+Appends to yesterday's journal.
 
 ```bash
-lsq -c
+lsq p my-page "Entry text here"
 ```
-This prints today's journal content to STDOUT without opening an editor.
-Useful for shell integration, piping to other tools, or display widgets.
+Appends to the page named `my-page` (extension auto-detected). Without text, opens the page in editor.
 
 ```bash
-lsq -c -n 3
+lsq t --indent 1 "sub-item text"
 ```
-This prints the journal from 3 days ago to STDOUT.
+Appends text as an indented bullet (one tab level deep). Use `--indent 2` for two levels, and so on.
 
 ```bash
-lsq -a "sub-item text" -i 1
+lsq search TODO
 ```
-This appends text as an indented bullet (one tab level deep), creating a nested
-list item in Logseq. Use `-i 2` for two levels deep, and so on.
+Searches all journals and pages for lines containing `TODO`.
+
+```bash
+lsq search '/TODO|FIXME/'
+```
+Searches using the regex `TODO|FIXME`.
+
+```bash
+lsq search TODO --open
+```
+Searches for `TODO` and opens the first matching file in editor.
+
+```bash
+lsq find go
+```
+Lists pages whose filename starts with `go`.
+
+```bash
+lsq s
+```
+Prints today's journal to STDOUT. Useful for shell integration, piping, or display widgets.
+
+```bash
+lsq s a 3
+```
+Prints the journal from 3 days ago to STDOUT.
+
+```bash
+lsq s p notes
+```
+Prints the `notes` page to STDOUT.
+
+```bash
+cat ~/.zshrc | lsq t
+```
+Appends the contents of `~/.zshrc` to today's journal via STDIN.
+
+```bash
+run_long_batch_job |& lsq p "long-job.$(date +%s).log"
+```
+Appends STDOUT and STDERR of a long-running job to a new page.
 
 ## Contributing
 For information on contributing to lsq check out [CONTRIBUTING.md](https://github.com/jrswab/lsq/blob/master/CONTRIBUTING.md).

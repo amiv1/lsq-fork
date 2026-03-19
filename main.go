@@ -1,252 +1,93 @@
 package main
 
 import (
-	"bufio"
-	"flag"
 	"fmt"
-	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
-	"time"
 
 	"github.com/jrswab/lsq/config"
-	"github.com/jrswab/lsq/system"
-	"github.com/jrswab/lsq/trie"
+	"github.com/spf13/cobra"
 )
 
-const semVer string = "1.4.0"
+const semVer = "1.5.0"
 
-// Search regex pattern in given file, print matching lines
-func searchInFile(filePath string, pattern *regexp.Regexp) error {
-	file, err := os.Open(filePath)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
+var (
+	dirFlag    string
+	editorFlag string
+	indentFlag int
+)
 
-	scanner := bufio.NewScanner(file)
-	lineNumber := 0
-	for scanner.Scan() {
-		lineNumber++
-		line := scanner.Text()
-		if pattern.MatchString(line) {
-			fmt.Printf("%s#%d: %s\n", filePath, lineNumber, line)
-		}
-	}
-	return scanner.Err()
+var rootCmd = &cobra.Command{
+	Use:          "lsq",
+	Short:        "The ultra-fast CLI companion for Logseq",
+	Version:      semVer,
+	SilenceUsage: true,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return runJournal("", nil)
+	},
 }
 
-// Search regex pattern in all files within directory
-func searchInDirectory(directory string, pattern *regexp.Regexp) error {
-	return filepath.Walk(directory, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-		if !info.IsDir() {
-			err := searchInFile(path, pattern)
-			if err != nil {
-				return err
-			}
-		}
-		return nil
-	})
+func init() {
+	rootCmd.PersistentFlags().StringVar(&dirFlag, "dir", "", "Logseq directory (overrides config)")
+	rootCmd.PersistentFlags().StringVar(&editorFlag, "editor", "", "Editor to use (default: $EDITOR, fallback: vim)")
+
+	rootCmd.AddCommand(todayCmd, yesterdayCmd, agoCmd, pageCmd, showCmd, searchCmd, findCmd)
 }
 
 func main() {
-	// File Path Override
-	lsqDirPath := flag.String("d", "", "The path to the Logseq directory to use.")
-
-	apndStdin := flag.Bool("A", false, "Append STDIN to the current journal page. This will not open $EDITOR.")
-	apnd := flag.String("a", "", "Append text to the current journal page. This will not open $EDITOR.")
-	catFile := flag.Bool("c", false, "Print journal or page content to STDOUT instead of opening an editor.")
-	editorType := flag.String("e", "", "The external editor to use. Will use $EDITOR when blank or omitted.")
-	cliSearch := flag.String("f", "", "Search by file name in your pages directory.")
-	indent := flag.Int("i", 0, "Absolute indentation level (number of tab characters) for appended text. Requires -a or -A.")
-	daysAgo := flag.Int("n", 0, "Number of days ago to target for the journal entry.")
-	openFirstResult := flag.Bool("o", false, "Open the first result from search automatically.")
-	pageToOpen := flag.String("p", "", "Open a specific page from the pages directory. Must be a file name with extension.")
-	regexSearch := flag.String("r", "", "Search by regex pattern in pages directory.")
-	specDate := flag.String("s", "", "Open a specific journal. Use yyyy-MM-dd after the flag.")
-	version := flag.Bool("v", false, "Display current lsq version")
-	yesterday := flag.Bool("y", false, "Open yesterday's journal page")
-
-	flag.Parse()
-
-	if *version {
-		fmt.Println(semVer)
-		os.Exit(0)
-	}
-
-	if *daysAgo < 0 {
-		fmt.Fprintln(os.Stderr, "Error: -n must be a non-negative integer")
+	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
 	}
+}
 
-	if *indent < 0 {
-		fmt.Fprintln(os.Stderr, "Error: indentation level must be zero or greater")
-		os.Exit(1)
-	}
-
-	if *indent > 0 && *apnd == "" && !*apndStdin {
-		fmt.Fprintln(os.Stderr, "Error: -i requires -a or -A")
-		os.Exit(1)
-	}
-
-	if *apndStdin {
-		content, err := io.ReadAll(os.Stdin)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error reading STDIN: %v\n", err)
-			os.Exit(1)
-		}
-		*apnd = string(content)
-	}
-
+// loadConfig loads lsq configuration and applies the --dir override if set.
+func loadConfig() (*config.Config, error) {
 	cfg, err := config.Load()
 	if err != nil && !os.IsNotExist(err) {
-		// The user has a config file but we couldn't read it.
-		// Report the error instead of ignoring their configuration.
-		log.Printf("Error loading configuration: %v\n", err)
-		os.Exit(1)
+		return nil, fmt.Errorf("error loading configuration: %w", err)
 	}
-
-	// When this flag is used override the config.
-	if *lsqDirPath != "" {
-		expanded, expandErr := config.ExpandPath(*lsqDirPath)
+	if dirFlag != "" {
+		expanded, expandErr := config.ExpandPath(dirFlag)
 		if expandErr != nil {
-			log.Printf("Error expanding directory path: %v\n", expandErr)
-			os.Exit(1)
+			return nil, fmt.Errorf("error expanding directory path: %w", expandErr)
 		}
 		cfg.DirPath = expanded
 		cfg.JournalsDir = filepath.Join(cfg.DirPath, "journals")
 		cfg.PagesDir = filepath.Join(cfg.DirPath, "pages")
 	}
+	return cfg, nil
+}
 
-	if *pageToOpen != "" {
-		pagePath := filepath.Join(cfg.PagesDir, *pageToOpen)
-
-		// Print page content to STDOUT and exit.
-		if *catFile {
-			if err := system.PrintFile(pagePath); err != nil {
-				log.Printf("Error printing page: %v\n", err)
-				os.Exit(1)
-			}
-			return
-		}
-
-		// Append to page and exit.
-		if *apnd != "" {
-			err := system.AppendToFile(pagePath, *apnd, *indent)
-			if err != nil {
-				log.Printf("Error appending data to file: %v\n", err)
-				os.Exit(1)
-			}
-			// Don't open $EDITOR when append flag is used.
-			return
-		}
-
-		// Open page in default editor if specified:
-		system.LoadEditor(*editorType, pagePath)
-		return
+// resolveSearch parses a search query and returns a regex pattern.
+// A value wrapped in leading and trailing slashes (e.g. /pattern/) is treated
+// as a raw regex; anything else is matched literally.
+func resolveSearch(query string) (prefix, regexPattern string) {
+	if len(query) > 1 && strings.HasPrefix(query, "/") && strings.HasSuffix(query, "/") {
+		return "", query[1 : len(query)-1]
 	}
+	return "", regexp.QuoteMeta(query)
+}
 
-	// Init regex search if "-r"
-	if *regexSearch != "" {
-		pattern, err := regexp.Compile(*regexSearch)
-		if err != nil {
-			log.Printf("Error compiling regex pattern: %v\n", err)
-			os.Exit(1)
-		}
-
-		// Search in the directories
-		for _, searchDirectory := range []string{cfg.JournalsDir, cfg.PagesDir} {
-			err = searchInDirectory(searchDirectory, pattern)
-			if err != nil {
-				fmt.Println("Error searching directory:", err)
-			}
-		}
-
-		return
+// resolvePageName returns the filename in pagesDir matching name (case-insensitive,
+// ignoring extension). Returns name unchanged if it already has an extension or no
+// match is found.
+func resolvePageName(pagesDir, name string) string {
+	if filepath.Ext(name) != "" {
+		return name
 	}
-
-	// Init Search only when "-f" is passed
-	var searchTrie *trie.Trie
-	if !strings.EqualFold(*cliSearch, "") {
-		searchTrie, err = trie.Init(cfg.PagesDir)
-		if err != nil {
-			log.Printf("error loading pages directory for search: %v\n", err)
-			os.Exit(1)
-		}
-	}
-
-	if *cliSearch != "" {
-		results := searchTrie.Search(*cliSearch)
-		if len(results) < 1 {
-			fmt.Println("No results found")
-			return
-		}
-
-		if *openFirstResult {
-			system.LoadEditor(*editorType, fmt.Sprintf("%s/%s", cfg.PagesDir, results[0]))
-			return
-		}
-
-		fmt.Fprintf(os.Stdout, "Search Results:\n")
-		for _, val := range results {
-			fmt.Println(val)
-		}
-
-		return
-	}
-
-	// Check that the journals directory exists
-	_, err = os.Stat(cfg.DirPath)
+	entries, err := os.ReadDir(pagesDir)
 	if err != nil {
-		if os.IsNotExist(err) {
-			fmt.Printf("Could not find Logseq files at '%s'.\nMake sure the path is correct and the directories exist.\n", cfg.DirPath)
-			os.Exit(1)
+		return name
+	}
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			base := strings.TrimSuffix(entry.Name(), filepath.Ext(entry.Name()))
+			if strings.EqualFold(base, name) {
+				return entry.Name()
+			}
 		}
-
-		log.Printf("Error loading the main directory: %v\n", err)
-		os.Exit(1)
 	}
-
-	if *yesterday {
-		*specDate = time.Now().Add(-24 * time.Hour).Format("2006-01-02")
-	}
-
-	// When -n is provided, compute the date N days ago.
-	if *daysAgo > 0 {
-		*specDate = time.Now().AddDate(0, 0, -*daysAgo).Format("2006-01-02")
-	}
-
-	journalPath, err := system.GetJournal(cfg, cfg.JournalsDir, *specDate)
-	if err != nil {
-		log.Printf("Error setting journal path: %v\n", err)
-		os.Exit(1)
-	}
-
-	// Print journal content to STDOUT and exit.
-	if *catFile {
-		if err := system.PrintFile(journalPath); err != nil {
-			log.Printf("Error printing journal: %v\n", err)
-			os.Exit(1)
-		}
-		return
-	}
-
-	if *apnd != "" {
-		err := system.AppendToFile(journalPath, *apnd, *indent)
-		if err != nil {
-			log.Printf("Error appending data to file: %v\n", err)
-			os.Exit(1)
-		}
-
-		// Don't open $EDITOR  when append flag is used.
-		return
-	}
-
-	system.LoadEditor(*editorType, journalPath)
+	return name
 }
