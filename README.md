@@ -4,9 +4,9 @@
 
 # lsq
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/jrswab/lsq)](https://goreportcard.com/report/github.com/jrswab/lsq)
-[![Release](https://img.shields.io/github/v/release/jrswab/lsq)](https://github.com/jrswab/lsq/releases)
-[![License](https://img.shields.io/github/license/jrswab/lsq)](https://github.com/jrswab/lsq/blob/master/LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/amiv1/lsq)](https://goreportcard.com/report/github.com/amiv1/lsq)
+[![Release](https://img.shields.io/github/v/release/amiv1/lsq)](https://github.com/amiv1/lsq/releases)
+[![License](https://img.shields.io/github/license/amiv1/lsq)](https://github.com/amiv1/lsq/blob/master/LICENSE)
 
 The ultra-fast CLI companion for [Logseq](https://github.com/logseq/logseq) designed to speed up your note capture directly from the terminal!
 
@@ -29,7 +29,7 @@ The ultra-fast CLI companion for [Logseq](https://github.com/logseq/logseq) desi
 ## Ready to Start?
 1. Install the binary via Go:
 ```bash
-go install github.com/jrswab/lsq@latest
+go install github.com/amiv1/lsq@latest
 ```
 2. Make sure you have the location of the Go binaries in your $PATH. Run `go env` and find the variable called `GOPATH`. Then copy that location to your shell's $PATH if it's not already there.
 
@@ -190,7 +190,7 @@ run_long_batch_job |& lsq p "long-job.$(date +%s).log"
 Appends STDOUT and STDERR of a long-running job to a new page.
 
 ## Contributing
-For information on contributing to lsq check out [CONTRIBUTING.md](https://github.com/jrswab/lsq/blob/master/CONTRIBUTING.md).
+For information on contributing to lsq check out [CONTRIBUTING.md](https://github.com/amiv1/lsq/blob/master/CONTRIBUTING.md).
 
 ## License
 GPL v3

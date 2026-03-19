@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/jrswab/lsq/validator"
+	"github.com/amiv1/lsq/validator"
 	"olympos.io/encoding/edn"
 )
 

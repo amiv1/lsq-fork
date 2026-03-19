@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/jrswab/lsq/config"
-	"github.com/jrswab/lsq/system"
+	"github.com/amiv1/lsq/config"
+	"github.com/amiv1/lsq/system"
 	"github.com/spf13/cobra"
 )
 

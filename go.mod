@@ -1,4 +1,4 @@
-module github.com/jrswab/lsq
+module github.com/amiv1/lsq
 
 go 1.23.0
 

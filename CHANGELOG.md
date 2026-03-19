@@ -82,7 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - README to reflect TUI deprecation
-- How the `d` flag operates. The full path must be specified when using this flag. Example: "/home/jrswab/documents/notes"
+- How the `d` flag operates. The full path must be specified when using this flag. Example: "/home/amiv1/documents/notes"
 - No longer using the Logseq `config.edn` file.
 - `CONTRIBUTIONS.md` to be `CONTRIBUTING.md`
 - `README.md`
@@ -155,7 +155,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Specify a specific journal page data to open.
 
 ### Changed
-- Link typos in README.md by [@kandros](https://github.com/jrswab/lsq/commits?author=kandros)
+- Link typos in README.md by [@kandros](https://github.com/amiv1/lsq/commits?author=kandros)
 - LoadConfig and GetTodaysJournal functions into system package
 
 ## [0.2.0] - 2024-11-28

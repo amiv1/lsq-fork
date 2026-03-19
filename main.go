@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/jrswab/lsq/config"
+	"github.com/amiv1/lsq/config"
 	"github.com/spf13/cobra"
 )
 

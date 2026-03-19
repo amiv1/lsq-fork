@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jrswab/lsq/config"
-	"github.com/jrswab/lsq/system"
-	i "github.com/jrswab/lsq/tests/integration"
+	"github.com/amiv1/lsq/config"
+	"github.com/amiv1/lsq/system"
+	i "github.com/amiv1/lsq/tests/integration"
 )
 
 func TestBasicJournalCreation(t *testing.T) {

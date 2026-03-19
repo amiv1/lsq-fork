@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/jrswab/lsq/system"
+	"github.com/amiv1/lsq/system"
 	"github.com/spf13/cobra"
 )
 
