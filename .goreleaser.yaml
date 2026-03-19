@@ -1,10 +1,48 @@
+version: 2
+
 project_name: lsq
 
 builds:
-  - binary: lsq
+  - id: linux
+    binary: lsq
     env:
       - CGO_ENABLED=0
-    goos:
-      - linux
-      - darwin
-      - windows
+    goos: [linux]
+  - id: darwin
+    binary: lsq
+    env:
+      - CGO_ENABLED=0
+    goos: [darwin]
+
+archives:
+  - ids: [darwin]
+    formats: [tar.gz]
+
+nfpms:
+  - package_name: lsq
+    vendor: amiv1
+    homepage: https://github.com/amiv1/lsq-fork
+    maintainer: andrey.m@fastmail.com
+    description: The ultra-fast CLI companion for Logseq
+    license: GPL-3.0
+    formats:
+      - deb
+      - rpm
+    bindir: /usr/bin
+
+homebrew_casks:
+  - name: lsq
+    repository:
+      owner: amiv1
+      name: homebrew-lsq
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    homepage: https://github.com/amiv1/lsq-fork
+    description: The ultra-fast CLI companion for Logseq
+    url:
+      verified: github.com/amiv1/lsq-fork
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/lsq"]
+          end
