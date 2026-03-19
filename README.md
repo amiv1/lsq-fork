@@ -31,23 +31,22 @@ The ultra-fast CLI companion for [Logseq](https://github.com/logseq/logseq) desi
 ### macOS — Homebrew
 
 ```bash
-brew install --cask amiv1/lsq/lsq
+brew install amiv1/lsq/lsq
 ```
 
 ### Debian / Ubuntu
 
-Download the `.deb` from the [latest release](https://github.com/amiv1/lsq-fork/releases/latest) and install:
-
 ```bash
-sudo dpkg -i lsq_*.deb
+curl -s https://apt.fury.io/amiv1/gpg.key | sudo apt-key add -
+echo "deb https://apt.fury.io/amiv1/ * *" | sudo tee /etc/apt/sources.list.d/lsq.list
+sudo apt update && sudo apt install lsq
 ```
 
 ### Fedora / RHEL / CentOS
 
-Download the `.rpm` from the [latest release](https://github.com/amiv1/lsq-fork/releases/latest) and install:
-
 ```bash
-sudo rpm -i lsq_*.rpm
+sudo dnf config-manager --add-repo https://yum.fury.io/amiv1/
+sudo dnf install lsq
 ```
 
 ## Usage

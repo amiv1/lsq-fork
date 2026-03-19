@@ -31,3 +31,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
+      - name: Push packages to Gemfury
+        run: |
+          for pkg in dist/*.deb dist/*.rpm; do
+            [ -f "$pkg" ] && curl -sSf -F "package=@${pkg}" "https://${FURY_TOKEN}@push.fury.io/amiv1/"
+          done
+        env:
+          FURY_TOKEN: ${{ secrets.FURY_TOKEN }}
