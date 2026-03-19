@@ -28,7 +28,27 @@ The ultra-fast CLI companion for [Logseq](https://github.com/logseq/logseq) desi
 
 ## Installation
 
-Coming soon...
+### macOS — Homebrew
+
+```bash
+brew install --cask amiv1/lsq/lsq
+```
+
+### Debian / Ubuntu
+
+Download the `.deb` from the [latest release](https://github.com/amiv1/lsq-fork/releases/latest) and install:
+
+```bash
+sudo dpkg -i lsq_*.deb
+```
+
+### Fedora / RHEL / CentOS
+
+Download the `.rpm` from the [latest release](https://github.com/amiv1/lsq-fork/releases/latest) and install:
+
+```bash
+sudo rpm -i lsq_*.rpm
+```
 
 ## Usage
 
