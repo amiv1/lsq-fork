@@ -30,24 +30,51 @@ The ultra-fast CLI companion for [Logseq](https://github.com/logseq/logseq) desi
 
 ### macOS — Homebrew
 
-```bash
+```shell
 brew install amiv1/lsq/lsq
 ```
 
 ### Debian / Ubuntu
 
-```bash
-curl -s https://apt.fury.io/amiv1/gpg.key | sudo apt-key add -
-echo "deb https://apt.fury.io/amiv1/ * *" | sudo tee /etc/apt/sources.list.d/lsq.list
+Add a repository:
+```shell
+curl -fsSL https://apt.fury.io/amiv1/gpg.key | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/fury-amiv1.gpg
+echo "deb [signed-by=/etc/apt/trusted.gpg.d/fury-amiv1.gpg] https://apt.fury.io/amiv1/ * *" | sudo tee /etc/apt/sources.list.d/lsq-fork.list
+```
+
+Install lsq:
+```shell
 sudo apt update && sudo apt install lsq
 ```
 
 ### Fedora / RHEL / CentOS
 
-```bash
-sudo dnf config-manager --add-repo https://yum.fury.io/amiv1/
+Add a repository:
+```shell
+echo "[fury-amiv1]
+name=lsq (Gemfury)
+baseurl=https://yum.fury.io/amiv1/
+enabled=1
+gpgcheck=0" | sudo tee /etc/yum.repos.d/fury-amiv1.repo
+```
+
+Install lsq:
+```shell
 sudo dnf install lsq
 ```
+
+### Build and install from source
+
+Requires Go:
+
+```bash
+git clone https://github.com/amiv1/lsq-fork.git
+cd lsq-fork
+go install .
+```
+
+Make sure you have the location of the Go binaries in your `$PATH`. Run go env and find the variable called GOPATH.
+Then copy that location to your shell's `$PATH` if it's not already there.
 
 ## Usage
 
@@ -125,77 +152,77 @@ The configuration file will override any lsq defaults which are defined. If a CL
 
 ### Usage Examples:
 
-```bash
+```shell
 lsq t
 ```
 Opens today's journal in `$EDITOR`.
 
-```bash
+```shell
 lsq t "Entry text here"
 ```
 Appends `Entry text here` as a bullet point to today's journal.
 
-```bash
+```shell
 lsq a 2 "Entry text here"
 ```
 Appends to the journal from 2 days ago.
 
-```bash
+```shell
 lsq y "Entry text here"
 ```
 Appends to yesterday's journal.
 
-```bash
+```shell
 lsq p my-page "Entry text here"
 ```
 Appends to the page named `my-page` (extension auto-detected). Without text, opens the page in editor.
 
-```bash
+```shell
 lsq t --indent 1 "sub-item text"
 ```
 Appends text as an indented bullet (one tab level deep). Use `--indent 2` for two levels, and so on.
 
-```bash
+```shell
 lsq search TODO
 ```
 Searches all journals and pages for lines containing `TODO`.
 
-```bash
+```shell
 lsq search '/TODO|FIXME/'
 ```
 Searches using the regex `TODO|FIXME`.
 
-```bash
+```shell
 lsq search TODO --open
 ```
 Searches for `TODO` and opens the first matching file in editor.
 
-```bash
+```shell
 lsq find go
 ```
 Lists pages whose filename starts with `go`.
 
-```bash
+```shell
 lsq g
 ```
 Prints today's journal to STDOUT. Useful for shell integration, piping, or display widgets.
 
-```bash
+```shell
 lsq g a 3
 ```
 Prints the journal from 3 days ago to STDOUT.
 
-```bash
+```shell
 lsq g p notes
 ```
 Prints the `notes` page to STDOUT.
 
-```bash
+```shell
 cat ~/.zshrc | lsq t
 ```
 Appends the contents of `~/.zshrc` to today's journal via STDIN.
 
-```bash
+```shell
 run_long_batch_job |& lsq p "long-job.$(date +%s).log"
 ```
 Appends STDOUT and STDERR of a long-running job to a new page.
