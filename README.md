@@ -10,6 +10,8 @@
 
 The ultra-fast CLI companion for [Logseq](https://github.com/logseq/logseq) designed to speed up your note capture directly from the terminal!
 
+> **Fork of [jrswab/lsq](https://github.com/jrswab/lsq)** — aimed at improving UX and adding more features.
+
 ## Why lsq?
 - ⚡️ Lightning-fast journal additions without leaving your terminal
 - ⌨️ Optimized for both quick captures and extended writing sessions
