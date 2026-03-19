@@ -30,6 +30,12 @@ The ultra-fast CLI companion for [Logseq](https://github.com/logseq/logseq) desi
 
 ## Installation
 
+If you have the [original lsq](https://github.com/jrswab/lsq) installed with `go install`, remove it first:
+
+```shell
+rm $(which lsq)
+```
+
 ### macOS — Homebrew
 
 ```shell
