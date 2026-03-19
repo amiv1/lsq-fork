@@ -9,17 +9,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var showCmd = &cobra.Command{
-	Use:          "show",
+var getCmd = &cobra.Command{
+	Use:          "get",
 	Short:        "Print journal or page to STDOUT",
-	Aliases:      []string{"s"},
+	Aliases:      []string{"g"},
 	SilenceUsage: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return runShowJournal("")
 	},
 }
 
-var showYesterdayCmd = &cobra.Command{
+var getYesterdayCmd = &cobra.Command{
 	Use:          "yesterday",
 	Short:        "Print yesterday's journal",
 	Aliases:      []string{"y"},
@@ -30,7 +30,7 @@ var showYesterdayCmd = &cobra.Command{
 	},
 }
 
-var showAgoCmd = &cobra.Command{
+var getAgoCmd = &cobra.Command{
 	Use:          "ago <n>",
 	Short:        "Print journal from N days ago",
 	Aliases:      []string{"a"},
@@ -46,7 +46,7 @@ var showAgoCmd = &cobra.Command{
 	},
 }
 
-var showDateCmd = &cobra.Command{
+var getDateCmd = &cobra.Command{
 	Use:          "date <yyyy-MM-dd>",
 	Short:        "Print journal for a specific date",
 	Aliases:      []string{"d"},
@@ -57,7 +57,7 @@ var showDateCmd = &cobra.Command{
 	},
 }
 
-var showPageCmd = &cobra.Command{
+var getPageCmd = &cobra.Command{
 	Use:          "page <name>",
 	Short:        "Print a specific page",
 	Aliases:      []string{"p"},
@@ -69,7 +69,7 @@ var showPageCmd = &cobra.Command{
 }
 
 func init() {
-	showCmd.AddCommand(showYesterdayCmd, showAgoCmd, showDateCmd, showPageCmd)
+	getCmd.AddCommand(getYesterdayCmd, getAgoCmd, getDateCmd, getPageCmd)
 }
 
 func runShowJournal(specDate string) error {

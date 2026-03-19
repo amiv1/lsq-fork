@@ -281,7 +281,7 @@ func TestCLIShowToday(t *testing.T) {
 	if err := os.WriteFile(e.todayJournalPath(), []byte("- seeded entry\n"), 0644); err != nil {
 		t.Fatal(err)
 	}
-	stdout, stderr, err := e.run("s", "--dir", e.logseqDir)
+	stdout, stderr, err := e.run("g", "--dir", e.logseqDir)
 	if err != nil {
 		t.Fatalf("unexpected error: %v\nstderr: %s", err, stderr)
 	}
@@ -291,7 +291,7 @@ func TestCLIShowToday(t *testing.T) {
 }
 
 func TestCLIShowAliases(t *testing.T) {
-	for _, cmd := range []string{"show", "s"} {
+	for _, cmd := range []string{"get", "g"} {
 		e := newCLIEnv(t)
 		if err := os.WriteFile(e.todayJournalPath(), []byte("- content\n"), 0644); err != nil {
 			t.Fatal(err)
@@ -312,8 +312,8 @@ func TestCLIShowYesterday(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, args := range [][]string{
-		{"s", "--dir", e.logseqDir, "yesterday"},
-		{"s", "--dir", e.logseqDir, "y"},
+		{"g", "--dir", e.logseqDir, "yesterday"},
+		{"g", "--dir", e.logseqDir, "y"},
 	} {
 		out, _, err := e.run(args...)
 		if err != nil {
@@ -331,8 +331,8 @@ func TestCLIShowAgo(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, args := range [][]string{
-		{"s", "--dir", e.logseqDir, "ago", "3"},
-		{"s", "--dir", e.logseqDir, "a", "3"},
+		{"g", "--dir", e.logseqDir, "ago", "3"},
+		{"g", "--dir", e.logseqDir, "a", "3"},
 	} {
 		out, _, err := e.run(args...)
 		if err != nil {
@@ -351,8 +351,8 @@ func TestCLIShowDate(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, args := range [][]string{
-		{"s", "--dir", e.logseqDir, "date", "2024-01-15"},
-		{"s", "--dir", e.logseqDir, "d", "2024-01-15"},
+		{"g", "--dir", e.logseqDir, "date", "2024-01-15"},
+		{"g", "--dir", e.logseqDir, "d", "2024-01-15"},
 	} {
 		out, _, err := e.run(args...)
 		if err != nil {
@@ -371,8 +371,8 @@ func TestCLIShowPage(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, args := range [][]string{
-		{"s", "--dir", e.logseqDir, "page", "notes"},
-		{"s", "--dir", e.logseqDir, "p", "notes"},
+		{"g", "--dir", e.logseqDir, "page", "notes"},
+		{"g", "--dir", e.logseqDir, "p", "notes"},
 	} {
 		out, _, err := e.run(args...)
 		if err != nil {
@@ -427,7 +427,7 @@ func TestCLISearchPlainText(t *testing.T) {
 	if err := os.WriteFile(e.todayJournalPath(), []byte("- TODO buy milk\n- regular note\n"), 0644); err != nil {
 		t.Fatal(err)
 	}
-	for _, cmd := range []string{"search", "sr"} {
+	for _, cmd := range []string{"search", "s"} {
 		stdout, stderr, err := e.run(cmd, "--dir", e.logseqDir, "TODO")
 		if err != nil {
 			t.Fatalf("%s: unexpected error: %v\nstderr: %s", cmd, err, stderr)

@@ -61,18 +61,18 @@ Open a specific page in your editor, or append text to it. File extension is aut
 
 Flag: `-i`/`--indent <n>`
 
-#### `lsq show` / `lsq s`
+#### `lsq get` / `lsq g`
 Print to STDOUT. Uses subcommands for date/target selection (default: today).
 
 | Subcommand | Alias | Example |
 |------------|-------|---------|
-| *(default)* | — | `lsq s` |
-| `show yesterday` | `s y` | `lsq s y` |
-| `show ago <n>` | `s a <n>` | `lsq s a 3` |
-| `show date <yyyy-MM-dd>` | `s d <date>` | `lsq s d 2024-01-15` |
-| `show page <name>` | `s p <name>` | `lsq s p notes` |
+| *(default)* | — | `lsq g` |
+| `get yesterday` | `g y` | `lsq g y` |
+| `get ago <n>` | `g a <n>` | `lsq g a 3` |
+| `get date <yyyy-MM-dd>` | `g d <date>` | `lsq g d 2024-01-15` |
+| `get page <name>` | `g p <name>` | `lsq g p notes` |
 
-#### `lsq search <query>` / `lsq sr`
+#### `lsq search <query>` / `lsq s`
 Search file **contents** across all journals and pages. Plain text matches literally; wrap in `/…/` for regex.
 
 Flag: `-o`/`--open` — open the first matching file in editor.
@@ -165,17 +165,17 @@ lsq find go
 Lists pages whose filename starts with `go`.
 
 ```bash
-lsq s
+lsq g
 ```
 Prints today's journal to STDOUT. Useful for shell integration, piping, or display widgets.
 
 ```bash
-lsq s a 3
+lsq g a 3
 ```
 Prints the journal from 3 days ago to STDOUT.
 
 ```bash
-lsq s p notes
+lsq g p notes
 ```
 Prints the `notes` page to STDOUT.
 

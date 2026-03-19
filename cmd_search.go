@@ -16,7 +16,7 @@ var searchOpenFlag bool
 var searchCmd = &cobra.Command{
 	Use:          "search <query>",
 	Short:        "Search content for a keyword, or /pattern/ for regex",
-	Aliases:      []string{"sr"},
+	Aliases:      []string{"s"},
 	Args:         cobra.ExactArgs(1),
 	SilenceUsage: true,
 	RunE: func(cmd *cobra.Command, args []string) error {

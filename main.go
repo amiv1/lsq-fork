@@ -33,7 +33,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&dirFlag, "dir", "", "Logseq directory (overrides config)")
 	rootCmd.PersistentFlags().StringVar(&editorFlag, "editor", "", "Editor to use (default: $EDITOR, fallback: vim)")
 
-	rootCmd.AddCommand(todayCmd, yesterdayCmd, agoCmd, pageCmd, showCmd, searchCmd, findCmd)
+	rootCmd.AddCommand(todayCmd, yesterdayCmd, agoCmd, pageCmd, getCmd, searchCmd, findCmd)
 }
 
 func main() {
