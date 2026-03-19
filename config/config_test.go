@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/amiv1/lsq/config"
+	"github.com/amiv1/lsq-fork/config"
 )
 
 func TestConvertDateFormat(t *testing.T) {

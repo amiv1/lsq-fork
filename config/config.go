@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/amiv1/lsq/validator"
+	"github.com/amiv1/lsq-fork/validator"
 	"olympos.io/encoding/edn"
 )
 

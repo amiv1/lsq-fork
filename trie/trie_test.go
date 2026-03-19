@@ -6,7 +6,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/amiv1/lsq/trie"
+	"github.com/amiv1/lsq-fork/trie"
 )
 
 func TestInit(t *testing.T) {

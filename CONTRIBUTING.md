@@ -18,7 +18,7 @@ git clone https://github.com/your-username/lsq.git
 ```
 1. Add the upstream remote:
 ```bash
-git remote add upstream https://github.com/amiv1/lsq.git
+git remote add upstream https://github.com/amiv1/lsq-fork.git
 ```
 1. Create a branch for your work:
 ```bash

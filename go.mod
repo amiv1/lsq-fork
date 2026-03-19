@@ -1,4 +1,4 @@
-module github.com/amiv1/lsq
+module github.com/amiv1/lsq-fork
 
 go 1.23.0
 
