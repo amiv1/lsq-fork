@@ -1,3 +1,9 @@
+## v2.0.1 (2026-03-19)
+
+### Fix
+
+- Rename module from `lsq-fork` to `lsq` for shorter binary
+
 ## v2.0.0 (2026-03-19)
 
 ### Feat
