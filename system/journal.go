@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/amiv1/lsq-fork/config"
+	"github.com/amiv1/lsq/config"
 )
 
 func CreateFilePath(cfg *config.Config, journalsDir, date string) string {

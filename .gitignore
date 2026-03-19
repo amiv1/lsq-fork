@@ -20,9 +20,8 @@
 !CONTRIBUTING.md
 !CHANGELOG.md
 !.cz.toml
+!.goreleaser.yaml
 !LICENSE
-
-# !Makefile
 
 # ...even if they are in subdirectories
 !*/

@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/amiv1/lsq-fork/system"
-	"github.com/amiv1/lsq-fork/trie"
+	"github.com/amiv1/lsq/system"
+	"github.com/amiv1/lsq/trie"
 	"github.com/spf13/cobra"
 )
 

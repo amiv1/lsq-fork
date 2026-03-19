@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/amiv1/lsq-fork/config"
-	"github.com/amiv1/lsq-fork/system"
-	i "github.com/amiv1/lsq-fork/tests/integration"
+	"github.com/amiv1/lsq/config"
+	"github.com/amiv1/lsq/system"
+	i "github.com/amiv1/lsq/tests/integration"
 )
 
 func TestBasicJournalCreation(t *testing.T) {
