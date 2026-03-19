@@ -1,48 +1,66 @@
-
-name: Check
+name: Release
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
+  workflow_dispatch:
+    inputs:
+      increment:
+        description: 'Version increment (leave empty to auto-detect from commits)'
+        required: false
+        type: choice
+        options:
+          - ''
+          - MAJOR
+          - MINOR
+          - PATCH
+
+permissions:
+  contents: write
 
 jobs:
-
-  lint:
+  release:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.23'
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
 
-    - name: Lint
-      uses: golangci/golangci-lint-action@v6.1.1
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
+      - name: Install commitizen
+        run: pip install commitizen
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.23'
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-    - name: Test
-      run: go test -v ./...
+      - name: Bump version and generate changelog
+        run: |
+          if [ -n "${{ inputs.increment }}" ]; then
+            cz bump --increment ${{ inputs.increment }} --changelog
+          else
+            cz bump --changelog
+          fi
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
+      - name: Push version bump commit and tag
+        run: |
+          git push origin HEAD
+          git push origin --tags
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.23'
-
-    - name: Build
-      run: go build -v ./...
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: "~> v1"
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
