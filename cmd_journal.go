@@ -50,6 +50,7 @@ var agoCmd = &cobra.Command{
 }
 
 func init() {
+	rootCmd.Flags().IntVarP(&indentFlag, "indent", "i", 0, "Logseq nesting level for appended text (2=child, 3=grandchild, etc.)")
 	for _, cmd := range []*cobra.Command{todayCmd, yesterdayCmd, agoCmd} {
 		cmd.Flags().IntVarP(&indentFlag, "indent", "i", 0, "Logseq nesting level for appended text (2=child, 3=grandchild, etc.)")
 	}

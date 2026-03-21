@@ -24,8 +24,9 @@ var rootCmd = &cobra.Command{
 	Short:        "The ultra-fast CLI companion for Logseq",
 	Version:      semVer,
 	SilenceUsage: true,
+	Args:         cobra.ArbitraryArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return runJournal("", nil)
+		return runJournal("", args)
 	},
 }
 

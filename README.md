@@ -93,13 +93,16 @@ Each command has a short alias. All commands accept `--dir` and `--editor` as gl
 #### Journal commands
 Open the journal in your editor, or append text if provided.
 
+`lsq [text...]` writes to today's journal by default — no subcommand needed. The explicit `lsq today` / `lsq t` form is also available.
+
 | Command | Alias | Description |
 |---------|-------|-------------|
+| `lsq [text...]` | — | Today's journal (default) |
 | `lsq today [text...]` | `lsq t` | Today's journal |
 | `lsq yesterday [text...]` | `lsq y` | Yesterday's journal |
 | `lsq ago <n> [text...]` | `lsq a <n>` | Journal from N days ago |
 
-When piped (`echo "text" | lsq t`), STDIN is appended automatically.  
+When piped (`echo "text" | lsq`), STDIN is appended automatically.  
 Flag: `-i`/`--indent <n>` — indentation level for appended text.
 
 #### `lsq page <name> [text...]` / `lsq p`
@@ -161,14 +164,24 @@ The configuration file will override any lsq defaults which are defined. If a CL
 ### Usage Examples:
 
 ```shell
-lsq t
+lsq
 ```
 Opens today's journal in `$EDITOR`.
 
 ```shell
-lsq t "Entry text here"
+lsq "Entry text here"
 ```
 Appends `Entry text here` as a bullet point to today's journal.
+
+```shell
+lsq t
+```
+Opens today's journal in `$EDITOR` (explicit form).
+
+```shell
+lsq t "Entry text here"
+```
+Appends to today's journal (explicit form).
 
 ```shell
 lsq a 2 "Entry text here"
@@ -186,7 +199,7 @@ lsq p my-page "Entry text here"
 Appends to the page named `my-page` (extension auto-detected). Without text, opens the page in editor.
 
 ```shell
-lsq t --indent 1 "sub-item text"
+lsq --indent 1 "sub-item text"
 ```
 Appends text as an indented bullet (one tab level deep). Use `--indent 2` for two levels, and so on.
 
@@ -226,7 +239,7 @@ lsq g p notes
 Prints the `notes` page to STDOUT.
 
 ```shell
-cat ~/.zshrc | lsq t
+cat ~/.zshrc | lsq
 ```
 Appends the contents of `~/.zshrc` to today's journal via STDIN.
 
