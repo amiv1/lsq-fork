@@ -189,21 +189,16 @@ func renderContent(content string, raw bool) string {
 	return rendered
 }
 
-// startPager starts $PAGER (defaulting to "less -R") and returns a writer
+// startPager starts $LSQ_PAGER (defaulting to "less -R") and returns a writer
 // connected to its stdin, plus a cleanup function that closes the pipe and
 // waits for the pager to exit.
 func startPager() (io.Writer, func(), error) {
-	pagerCmd := os.Getenv("PAGER")
+	pagerCmd := os.Getenv("LSQ_PAGER")
 	if pagerCmd == "" {
-		pagerCmd = "less"
+		pagerCmd = "less -R"
 	}
 
-	// Split into command + args (e.g. "less -R").
 	parts := strings.Fields(pagerCmd)
-	if pagerCmd == "less" {
-		parts = []string{"less", "-R"}
-	}
-
 	cmd := exec.Command(parts[0], parts[1:]...) //nolint:gosec
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

@@ -127,6 +127,11 @@ Browse all journal entries in a pager (newest first) with full Markdown renderin
 
 Flag: `--raw` — print raw Markdown without formatting or colours.
 
+The pager defaults to `less -R`. Override with `LSQ_PAGER`:
+```bash
+LSQ_PAGER="bat" lsq g j
+```
+
 #### `lsq search <query>` / `lsq s`
 Search file **contents** across all journals and pages. Plain text matches literally; wrap in `/…/` for regex.
 
@@ -141,6 +146,9 @@ Flag: `-o`/`--open` — open the first matching page in editor.
 Available on all commands:
 - `--dir <path>` — Logseq directory (overrides config). Supports `~` and environment variables.
 - `--editor <cmd>` — Editor to use (default: `$EDITOR`, fallback: vim).
+
+#### Environment variables
+- `LSQ_PAGER` — Pager used by `lsq g j` (default: `less -R`). Example: `LSQ_PAGER=bat`.
 
 ### Configuration File
 This file must be stored in your config directory as `lsq/config.edn`.
