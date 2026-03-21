@@ -1,3 +1,13 @@
+## v2.3.0 (2026-03-21)
+
+### Feat
+
+- Convert @tag to Logseq's #tag
+
+### Fix
+
+- Remove message printing from search results
+
 ## v2.2.0 (2026-03-21)
 
 ### Feat
