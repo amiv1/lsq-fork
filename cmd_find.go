@@ -27,14 +27,12 @@ var findCmd = &cobra.Command{
 		}
 		results := t.Search(args[0])
 		if len(results) == 0 {
-			fmt.Println("No results found")
 			return nil
 		}
 		if findOpenFlag {
 			system.LoadEditor(editorFlag, fmt.Sprintf("%s/%s", cfg.PagesDir, results[0]))
 			return nil
 		}
-		fmt.Println("Search Results:")
 		for _, r := range results {
 			fmt.Println(r)
 		}
