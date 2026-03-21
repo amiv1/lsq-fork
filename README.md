@@ -176,100 +176,100 @@ The configuration file will override any lsq defaults which are defined. If a CL
 
 ### Usage Examples:
 
+Opens today's journal in `$EDITOR`.
 ```shell
 lsq
 ```
-Opens today's journal in `$EDITOR`.
 
+Appends `Discussed Q2 planning` as a bullet point to today's journal.
 ```shell
-lsq "Entry text here"
+lsq Discussed Q2 planning
 ```
-Appends `Entry text here` as a bullet point to today's journal.
 
+Opens today's journal in `$EDITOR` (explicit form).
 ```shell
 lsq t
 ```
-Opens today's journal in `$EDITOR` (explicit form).
 
-```shell
-lsq t "Entry text here"
-```
 Appends to today's journal (explicit form).
-
 ```shell
-lsq a 2 "Entry text here"
+lsq t Read article on [[Clojure]] macros
 ```
+
 Appends to the journal from 2 days ago.
-
 ```shell
-lsq y "Entry text here"
+lsq a 2 Grocery run
 ```
+
 Appends to yesterday's journal.
-
 ```shell
-lsq p my-page "Entry text here"
+lsq y Morning standup notes
 ```
+
 Appends to the page named `my-page` (extension auto-detected). Without text, opens the page in editor.
-
 ```shell
-lsq --indent 1 "sub-item text"
+lsq p my-page Notes for [[Project X]]
 ```
-Appends text as an indented bullet (one tab level deep). Use `--indent 2` for two levels, and so on.
 
+Appends text as an indented bullet (one tab level deep). Use `--indent 2` for two levels, and so on.
+```shell
+lsq --indent 1 Follow up with Alice
+```
+
+Searches all journals and pages for lines containing `TODO`.
 ```shell
 lsq search TODO
 ```
-Searches all journals and pages for lines containing `TODO`.
 
+Searches using the regex `TODO|FIXME`.
 ```shell
 lsq search '/TODO|FIXME/'
 ```
-Searches using the regex `TODO|FIXME`.
 
+Searches for `TODO` and opens the first matching file in editor.
 ```shell
 lsq search TODO --open
 ```
-Searches for `TODO` and opens the first matching file in editor.
 
+Lists pages whose filename starts with `go`.
 ```shell
 lsq find go
 ```
-Lists pages whose filename starts with `go`.
 
+Prints today's journal to STDOUT. Useful for shell integration, piping, or display widgets.
 ```shell
 lsq g
 ```
-Prints today's journal to STDOUT. Useful for shell integration, piping, or display widgets.
 
+Prints the journal from 3 days ago to STDOUT.
 ```shell
 lsq g a 3
 ```
-Prints the journal from 3 days ago to STDOUT.
 
+Prints the `notes` page to STDOUT.
 ```shell
 lsq g p notes
 ```
-Prints the `notes` page to STDOUT.
 
+Opens an interactive pager showing all journal entries newest first, with Markdown rendering and coloured `[[links]]` and `#tags`.
 ```shell
 lsq g j
 ```
-Opens an interactive pager showing all journal entries newest first, with Markdown rendering and coloured `[[links]]` and `#tags`.
 
+Same, but prints raw Markdown without any formatting.
 ```shell
 lsq g j --raw
 ```
-Same, but prints raw Markdown without any formatting.
 
+Appends the contents of `~/.zshrc` to today's journal via STDIN.
 ```shell
 cat ~/.zshrc | lsq
 ```
-Appends the contents of `~/.zshrc` to today's journal via STDIN.
 
+Appends STDOUT and STDERR of a long-running job to a new page.
 ```shell
 run_long_batch_job |& lsq p "long-job.$(date +%s).log"
 ```
-Appends STDOUT and STDERR of a long-running job to a new page.
 
 ## Contributing
 For information on contributing to lsq check out [CONTRIBUTING.md](https://github.com/amiv1/lsq-fork/blob/master/CONTRIBUTING.md).
