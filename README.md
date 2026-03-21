@@ -274,6 +274,3 @@ run_long_batch_job |& lsq p "long-job.$(date +%s).log"
 
 ## Contributing
 For information on contributing to lsq check out [CONTRIBUTING.md](https://github.com/amiv1/lsq-fork/blob/master/CONTRIBUTING.md).
-
-## License
-GPL v3
