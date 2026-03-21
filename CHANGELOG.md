@@ -1,3 +1,15 @@
+## v2.2.0 (2026-03-21)
+
+### Feat
+
+- Use LSQ_PAGER env variable for journal pager
+- Add journal overview
+- Write into the today's journal by default
+
+### Refactor
+
+- rename cmd files to better match the intent
+
 ## v2.1.1 (2026-03-19)
 
 ## v2.1.0 (2026-03-19)
