@@ -196,6 +196,33 @@ func TestCLITodayMultipleWords(t *testing.T) {
 	}
 }
 
+func TestCLIAtTagConverted(t *testing.T) {
+	e := newCLIEnv(t)
+	_, stderr, err := e.run("t", "--dir", e.logseqDir, "hello", "@work")
+	if err != nil {
+		t.Fatalf("unexpected error: %v\nstderr: %s", err, stderr)
+	}
+	content := readFile(t, e.todayJournalPath())
+	if !strings.Contains(content, "hello #work") {
+		t.Errorf("expected journal to contain converted tag, got:\n%s", content)
+	}
+}
+
+func TestCLIEmailNotConverted(t *testing.T) {
+	e := newCLIEnv(t)
+	_, stderr, err := e.run("t", "--dir", e.logseqDir, "reach", "me", "at", "foo@bar.com")
+	if err != nil {
+		t.Fatalf("unexpected error: %v\nstderr: %s", err, stderr)
+	}
+	content := readFile(t, e.todayJournalPath())
+	if strings.Contains(content, "foo#bar.com") {
+		t.Errorf("expected email to remain unchanged, got:\n%s", content)
+	}
+	if !strings.Contains(content, "foo@bar.com") {
+		t.Errorf("expected journal to contain email, got:\n%s", content)
+	}
+}
+
 func TestCLITodayAliases(t *testing.T) {
 	for _, cmd := range []string{"today", "t"} {
 		e := newCLIEnv(t)

@@ -7,6 +7,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 
@@ -63,10 +64,18 @@ func PrintFile(path string) error {
 	return err
 }
 
+var atTagRE = regexp.MustCompile(`(^|\s)@([\pL\pN][\pL\pN/_-]*)`)
+
+func normalizeAtTags(s string) string {
+	return atTagRE.ReplaceAllString(s, `$1#$2`)
+}
+
 func AppendToFile(path, content string, indent int) error {
 	if indent < 0 {
 		return fmt.Errorf("invalid indent: %d", indent)
 	}
+
+	content = normalizeAtTags(content)
 
 	prefix := strings.Repeat("\t", indent)
 	bc := fmt.Sprintf("%s- %s\n", prefix, content)

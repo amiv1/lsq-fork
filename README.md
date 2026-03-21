@@ -102,7 +102,8 @@ Open the journal in your editor, or append text if provided.
 | `lsq ago <n> [text...]` | `lsq a <n>` | Journal from N days ago |
 
 When piped (`echo "text" | lsq`), STDIN is appended automatically.  
-Flag: `-i`/`--indent <n>` — indentation level for appended text.
+Flag: `-i`/`--indent <n>` — indentation level for appended text.  
+Tip: in shells, `#` starts a comment — use `@tag` in CLI input and `lsq` will write it as `#tag` (e.g. `lsq Met with Bob @work`).
 
 #### `lsq page <name> [text...]` / `lsq p`
 Open a specific page in your editor, or append text to it. File extension is auto-detected.
@@ -181,9 +182,9 @@ Opens today's journal in `$EDITOR`.
 lsq
 ```
 
-Appends `Discussed Q2 planning` as a bullet point to today's journal.
+Appends `Discussed Q2 planning @work` as a bullet point to today's journal.
 ```shell
-lsq Discussed Q2 planning
+lsq Discussed Q2 planning @work
 ```
 
 Opens today's journal in `$EDITOR` (explicit form).
@@ -193,27 +194,27 @@ lsq t
 
 Appends to today's journal (explicit form).
 ```shell
-lsq t Read article on [[Clojure]] macros
+lsq t Read article on [[Clojure]] macros @learning
 ```
 
 Appends to the journal from 2 days ago.
 ```shell
-lsq a 2 Grocery run
+lsq a 2 Grocery run @personal
 ```
 
 Appends to yesterday's journal.
 ```shell
-lsq y Morning standup notes
+lsq y Morning standup notes @work
 ```
 
 Appends to the page named `my-page` (extension auto-detected). Without text, opens the page in editor.
 ```shell
-lsq p my-page Notes for [[Project X]]
+lsq p my-page Notes for [[Project X]] @work
 ```
 
 Appends text as an indented bullet (one tab level deep). Use `--indent 2` for two levels, and so on.
 ```shell
-lsq --indent 1 Follow up with Alice
+lsq --indent 1 TODO Follow up with Alice @work
 ```
 
 Searches all journals and pages for lines containing `TODO`.
