@@ -19,14 +19,13 @@ The ultra-fast CLI companion for [Logseq](https://github.com/logseq/logseq) desi
 - 🔄 Seamless integration with your existing Logseq workflow
 - 💻 Built by Logseq users, for Logseq users
 
-## Features That Power Your Workflow
-- External editor integration ($EDITOR by default)
-- Automatic journal file creation
-- Support for both Markdown and Org formats
-- Configurable file naming format
-- Customizable directory location with `~` and environment variable support
-- STDOUT output mode for shell scripting and widget integration
-- User defined configuration file
+## Features
+- Just run `lsq` to open today's journal, or `lsq your note` to append instantly
+- Browse your entire journal history with `lsq g j` — rendered Markdown, coloured `[[links]]` and `#tags`
+- Open any page or journal entry in your `$EDITOR`
+- Search across all notes by text or regex
+- Works with both Markdown and Org Mode files
+- Simple config file — set your Logseq directory once and forget it
 
 ## Installation
 
