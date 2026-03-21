@@ -120,6 +120,12 @@ Print to STDOUT. Uses subcommands for date/target selection (default: today).
 | `get ago <n>` | `g a <n>` | `lsq g a 3` |
 | `get date <yyyy-MM-dd>` | `g d <date>` | `lsq g d 2024-01-15` |
 | `get page <name>` | `g p <name>` | `lsq g p notes` |
+| `get journal` | `g j` | `lsq g j` |
+
+#### `lsq get journal` / `lsq g j`
+Browse all journal entries in a pager (newest first) with full Markdown rendering, coloured `[[links]]` and `#tags`.
+
+Flag: `--raw` — print raw Markdown without formatting or colours.
 
 #### `lsq search <query>` / `lsq s`
 Search file **contents** across all journals and pages. Plain text matches literally; wrap in `/…/` for regex.
@@ -237,6 +243,16 @@ Prints the journal from 3 days ago to STDOUT.
 lsq g p notes
 ```
 Prints the `notes` page to STDOUT.
+
+```shell
+lsq g j
+```
+Opens an interactive pager showing all journal entries newest first, with Markdown rendering and coloured `[[links]]` and `#tags`.
+
+```shell
+lsq g j --raw
+```
+Same, but prints raw Markdown without any formatting.
 
 ```shell
 cat ~/.zshrc | lsq
