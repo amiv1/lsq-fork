@@ -69,7 +69,7 @@ var getPageCmd = &cobra.Command{
 }
 
 func init() {
-	getCmd.AddCommand(getYesterdayCmd, getAgoCmd, getDateCmd, getPageCmd)
+	getCmd.AddCommand(getYesterdayCmd, getAgoCmd, getDateCmd, getPageCmd, getJournalCmd)
 }
 
 func runShowJournal(specDate string) error {

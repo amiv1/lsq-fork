@@ -489,3 +489,88 @@ func TestCLIDirFlag(t *testing.T) {
 		t.Errorf("expected journal to contain text")
 	}
 }
+
+func TestCLIGetJournalRaw(t *testing.T) {
+	e := newCLIEnv(t)
+
+	// Write two journal files with distinct content.
+	today := e.todayJournalPath()
+	yesterday := e.nDaysAgoJournalPath(1)
+
+	writeFile(t, today, "- Today's entry\n- [[MyPage]] note\n- #todo item\n")
+	writeFile(t, yesterday, "- Yesterday's entry\n")
+
+	for _, cmd := range [][]string{{"g", "j", "--raw"}, {"get", "journal", "--raw"}} {
+		stdout, stderr, err := e.run(cmd...)
+		if err != nil {
+			t.Fatalf("%v: unexpected error: %v\nstderr: %s", cmd, err, stderr)
+		}
+
+		// Raw output should contain the literal markdown text.
+		if !strings.Contains(stdout, "Today's entry") {
+			t.Errorf("%v: expected today's entry in output, got:\n%s", cmd, stdout)
+		}
+		if !strings.Contains(stdout, "Yesterday's entry") {
+			t.Errorf("%v: expected yesterday's entry in output, got:\n%s", cmd, stdout)
+		}
+
+		// Date headers should appear (today before yesterday).
+		todayLabel := time.Now().Format("2006-01-02")
+		yesterdayLabel := time.Now().AddDate(0, 0, -1).Format("2006-01-02")
+		if !strings.Contains(stdout, todayLabel) {
+			t.Errorf("%v: expected today date header %q in output, got:\n%s", cmd, todayLabel, stdout)
+		}
+		if !strings.Contains(stdout, yesterdayLabel) {
+			t.Errorf("%v: expected yesterday date header %q in output, got:\n%s", cmd, yesterdayLabel, stdout)
+		}
+
+		// Today must appear before yesterday.
+		todayIdx := strings.Index(stdout, todayLabel)
+		yesterdayIdx := strings.Index(stdout, yesterdayLabel)
+		if todayIdx > yesterdayIdx {
+			t.Errorf("%v: expected today before yesterday in output", cmd)
+		}
+	}
+}
+
+func TestCLIGetJournalSkipsEmpty(t *testing.T) {
+	e := newCLIEnv(t)
+
+	// Write one empty and one non-empty journal.
+	today := e.todayJournalPath()
+	yesterday := e.nDaysAgoJournalPath(1)
+
+	writeFile(t, today, "")
+	writeFile(t, yesterday, "- Only yesterday has content\n")
+
+	stdout, stderr, err := e.run("g", "j", "--raw")
+	if err != nil {
+		t.Fatalf("unexpected error: %v\nstderr: %s", err, stderr)
+	}
+
+	if strings.Contains(stdout, time.Now().Format("2006-01-02")+" ") {
+		t.Errorf("expected empty today journal to be skipped, but date header found in output:\n%s", stdout)
+	}
+	if !strings.Contains(stdout, "Only yesterday has content") {
+		t.Errorf("expected yesterday's content in output, got:\n%s", stdout)
+	}
+}
+
+func TestCLIGetJournalNoEntries(t *testing.T) {
+	e := newCLIEnv(t)
+
+	_, stderr, err := e.run("g", "j", "--raw")
+	if err != nil {
+		t.Fatalf("unexpected error: %v\nstderr: %s", err, stderr)
+	}
+	if !strings.Contains(stderr, "No journal entries found") {
+		t.Errorf("expected 'No journal entries found' message, got stderr: %q", stderr)
+	}
+}
+
+func writeFile(t *testing.T, path, content string) {
+	t.Helper()
+	if err := os.WriteFile(path, []byte(content), 0644); err != nil {
+		t.Fatalf("WriteFile(%q): %v", path, err)
+	}
+}
